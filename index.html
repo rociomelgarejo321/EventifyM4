@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Eventify · Tu evento, sin complicaciones.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{--navy:#212541;--blue:#6669f4;--violet:#aa9df8;--lilac:#c6c6e8;--bg:#f4f3ff;--white:#fff;--grad:linear-gradient(135deg,#6669f4,#aa9df8);}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;color:var(--navy);background:var(--white);overflow-x:hidden;}
+
+.nav-logo-svg{height:36px;width:auto;}
+.nav-word-light{transition:fill .3s;}
+.nav-sym-stroke{transition:stroke .3s;}
+.nav-sym-fill{transition:fill .3s;}
+nav.scrolled .nav-word-light{fill:var(--navy);}
+nav.scrolled .nav-sym-stroke{stroke:var(--navy);}
+nav.scrolled .nav-sym-fill{fill:var(--navy);}
+/* CURSOR */
+.cur{width:15px;height:15px;border:2px solid var(--blue);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .12s,opacity .2s;mix-blend-mode:multiply;}
+.cur.big{transform:translate(-50%,-50%) scale(2.8);opacity:.25;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:.8rem 2.5rem;transition:all .4s;}
+nav.scrolled{background:rgba(255,255,255,.94);backdrop-filter:blur(18px);box-shadow:0 1px 24px rgba(102,105,244,.1);}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-txt{font-size:18px;font-weight:700;color:white;letter-spacing:-.3px;transition:color .3s;}
+nav.scrolled .nav-logo-txt{color:var(--navy);}
+.nav-links{display:flex;align-items:center;gap:1.6rem;}
+.nav-links a{font-size:13.5px;font-weight:500;color:rgba(255,255,255,.8);text-decoration:none;transition:color .2s;}
+nav.scrolled .nav-links a{color:#555;}
+.nav-links a:hover,.nav-links a:hover{color:var(--violet);}
+nav.scrolled .nav-links a:hover{color:var(--blue);}
+.nav-btn{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,.3);color:white;border-radius:10px;padding:8px 18px;font-size:13.5px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s;}
+nav.scrolled .nav-btn{background:var(--grad);border-color:transparent;box-shadow:0 4px 16px rgba(102,105,244,.3);}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 2rem 4rem;background:linear-gradient(160deg,#181a35 0%,#212541 40%,#2d3170 75%,#3a3ab8 100%);position:relative;overflow:hidden;text-align:center;}
+.blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none;}
+.b1{width:550px;height:550px;background:radial-gradient(rgba(102,105,244,.38),transparent);top:-120px;right:-100px;}
+.b2{width:400px;height:400px;background:radial-gradient(rgba(170,157,248,.28),transparent);bottom:-60px;left:-80px;}
+.b3{width:280px;height:280px;background:radial-gradient(rgba(198,198,232,.18),transparent);top:45%;left:10%;}
+
+/* HERO LOGO GRANDE */
+.hero-logo-wrap{margin-bottom:2.5rem;animation:fadeDown .8s ease both;}
+.hero-logo-svg{width:420px;max-width:90vw;filter:drop-shadow(0 8px 32px rgba(102,105,244,.4));}
+.hero-tagline{font-size:13px;color:rgba(255,255,255,.55);letter-spacing:3px;text-transform:uppercase;margin-top:6px;}
+
+@keyframes fadeDown{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+.hero-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:99px;padding:6px 16px;font-size:12.5px;color:rgba(255,255,255,.9);font-weight:600;margin-bottom:1.6rem;animation:fadeUp .7s .1s ease both;}
+.hero-pill .pd{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 1.5s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(34px,6vw,66px);font-weight:800;line-height:1.1;color:white;letter-spacing:-1.5px;margin-bottom:1.3rem;animation:fadeUp .8s .2s ease both;}
+.hero h1 .hl{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:17.5px;color:rgba(255,255,255,.7);max-width:520px;margin:0 auto 2.5rem;line-height:1.7;animation:fadeUp .8s .35s ease both;}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:3.5rem;animation:fadeUp .8s .45s ease both;}
+.btn-w{background:white;color:var(--blue);border:none;border-radius:12px;padding:14px 30px;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 28px rgba(0,0,0,.25);transition:all .2s;}
+.btn-w:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(0,0,0,.3);}
+.btn-gw{background:rgba(255,255,255,.1);color:white;border:1.5px solid rgba(255,255,255,.3);border-radius:12px;padding:13px 28px;font-size:15.5px;font-weight:600;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);transition:all .2s;}
+.btn-gw:hover{background:rgba(255,255,255,.2);}
+
+/* HERO MOCKUP */
+.hero-mock-wrap{animation:fadeUp .9s .55s ease both;width:100%;max-width:660px;margin:0 auto;}
+.hero-mock{background:rgba(255,255,255,.08);backdrop-filter:blur(22px);border-radius:18px;border:1px solid rgba(255,255,255,.16);padding:1.4rem;box-shadow:0 28px 70px rgba(0,0,0,.28);animation:float 4.5s ease-in-out infinite;}
+.mdots{display:flex;gap:6px;margin-bottom:14px;}
+.mdot{width:10px;height:10px;border-radius:50%;}
+.mock-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.mock-ht{font-size:13.5px;font-weight:700;color:white;}
+.badge-a{font-size:11px;background:rgba(102,105,244,.4);color:#c6c6e8;padding:3px 10px;border-radius:99px;font-weight:700;}
+.mcards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:12px;}
+.mc{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:11px;}
+.mt{font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px;display:inline-block;margin-bottom:6px;}
+.tn{background:rgba(102,105,244,.3);color:#c6c6e8;}.ta{background:rgba(34,197,94,.25);color:#86efac;}.td{background:rgba(245,158,11,.25);color:#fde68a;}
+.mn{font-size:12px;font-weight:600;color:white;margin-bottom:3px;}
+.mi{font-size:11px;color:rgba(255,255,255,.5);}
+.mb{height:3px;background:rgba(255,255,255,.15);border-radius:2px;margin-top:8px;overflow:hidden;}
+.mf{height:100%;border-radius:2px;}
+.mock-ev{background:rgba(102,105,244,.22);border:1px solid rgba(102,105,244,.28);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;}
+.eav{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:white;flex-shrink:0;}
+.etxt{font-size:12px;color:rgba(255,255,255,.82);line-height:1.5;}
+.etxt strong{color:#c6c6e8;}
+
+/* STATS */
+.stats{background:var(--navy);padding:2.5rem 2rem;display:flex;justify-content:center;flex-wrap:wrap;}
+.stat{text-align:center;padding:.9rem 2.5rem;border-right:1px solid rgba(255,255,255,.08);}
+.stat:last-child{border-right:none;}
+.stn{font-size:36px;font-weight:800;color:white;letter-spacing:-1px;}
+.stn span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stl{font-size:13px;color:var(--lilac);margin-top:3px;}
+
+/* SECTION BASE */
+.sec{padding:5rem 2rem;}
+.sl{font-size:11.5px;font-weight:800;color:var(--blue);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:.5rem;}
+.st{font-size:clamp(23px,4vw,36px);font-weight:800;color:var(--navy);text-align:center;margin-bottom:.7rem;letter-spacing:-.4px;}
+.ss{font-size:15px;color:#666;text-align:center;max-width:500px;margin:0 auto 2.8rem;line-height:1.65;}
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* PROBLEM */
+.prob-sec{background:var(--navy);padding:5rem 2rem;}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;max-width:880px;margin:3rem auto 0;}
+.pc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.4rem;transition:all .3s;cursor:default;}
+.pc:hover{background:rgba(102,105,244,.12);border-color:rgba(102,105,244,.3);transform:translateY(-4px);}
+.pe{font-size:26px;margin-bottom:10px;}
+.pc h4{font-size:14.5px;font-weight:700;color:white;margin-bottom:7px;}
+.pc p{font-size:13px;color:var(--lilac);line-height:1.55;}
+.arr{text-align:center;margin-top:2.5rem;font-size:30px;color:var(--violet);animation:bounce 1.8s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(9px)}}
+
+/* APP INTERACTIVA (Cumpleaños de Martina) */
+.app-sec{background:var(--bg);}
+.app-wrap{max-width:680px;margin:0 auto;}
+.app-mock{background:white;border-radius:22px;border:1px solid var(--lilac);overflow:hidden;box-shadow:0 16px 60px rgba(102,105,244,.13);}
+.app-tabs{display:flex;border-bottom:1px solid var(--lilac);}
+.atab{flex:1;padding:13px 8px;text-align:center;font-size:12.5px;font-weight:600;color:#999;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;}
+.atab.on{color:var(--blue);border-bottom-color:var(--blue);background:rgba(102,105,244,.04);}
+.app-content{padding:1.3rem;}
+.app-panel{display:none;}
+.app-panel.on{display:block;}
+
+/* Panel Organización */
+.org-event{background:var(--bg);border-radius:14px;padding:1.2rem;margin-bottom:12px;}
+.oe-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
+.oe-name{font-size:16px;font-weight:700;color:var(--navy);}
+.oe-pct{font-size:12px;background:rgba(102,105,244,.12);color:var(--blue);padding:3px 10px;border-radius:99px;font-weight:700;}
+.oe-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px;}
+.oes{background:white;border-radius:10px;padding:10px;border:1px solid var(--lilac);cursor:pointer;transition:all .2s;}
+.oes:hover{border-color:var(--blue);transform:scale(1.03);}
+.oes-label{font-size:10px;color:#999;margin-bottom:3px;}
+.oes-val{font-size:13px;font-weight:700;color:var(--navy);}
+.task-list{display:flex;flex-direction:column;gap:7px;}
+.task{display:flex;align-items:center;gap:10px;padding:9px 12px;background:white;border-radius:10px;border:1px solid var(--lilac);font-size:13px;color:var(--navy);cursor:pointer;transition:all .2s;}
+.task:hover{border-color:var(--blue);background:var(--bg);}
+.task-cb{width:18px;height:18px;border-radius:5px;border:2px solid var(--lilac);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s;}
+.task.done .task-cb{background:var(--blue);border-color:var(--blue);color:white;font-size:11px;}
+.task.done{color:#999;text-decoration:line-through;}
+.add-task{width:100%;margin-top:10px;padding:9px;border:1.5px dashed var(--lilac);border-radius:10px;background:transparent;font-size:13px;color:var(--blue);cursor:pointer;font-family:inherit;font-weight:600;transition:all .2s;}
+.add-task:hover{background:var(--bg);}
+
+/* Panel Cotización (interactivo) */
+.cot-form{display:flex;flex-direction:column;gap:14px;}
+.cf-label{font-size:12px;font-weight:700;color:#888;letter-spacing:.5px;margin-bottom:5px;display:block;}
+.cf-sel{width:100%;border:1.5px solid var(--lilac);border-radius:10px;padding:10px 14px;font-size:14px;color:var(--navy);font-family:inherit;outline:none;background:var(--bg);appearance:none;}
+.cf-sel:focus{border-color:var(--blue);}
+.range-row{display:flex;align-items:center;gap:12px;}
+.cf-range{flex:1;height:4px;appearance:none;background:var(--lilac);border-radius:2px;outline:none;cursor:pointer;}
+.cf-range::-webkit-slider-thumb{appearance:none;width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:pointer;box-shadow:0 2px 8px rgba(102,105,244,.4);}
+.rval{font-size:14px;font-weight:700;color:var(--blue);min-width:28px;}
+.cot-checks{display:grid;grid-template-columns:1fr 1fr;gap:7px;}
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--navy);padding:8px 10px;border-radius:8px;border:1.5px solid var(--lilac);transition:all .2s;background:white;}
+.chk:hover{border-color:var(--blue);background:var(--bg);}
+.chk input{accent-color:var(--blue);width:15px;height:15px;cursor:pointer;}
+.cot-res{background:linear-gradient(135deg,var(--bg),#e8e6ff);border-radius:12px;padding:1.1rem;border:1px solid var(--lilac);}
+.cot-rows{display:flex;flex-direction:column;gap:5px;margin-bottom:10px;}
+.cr{display:flex;justify-content:space-between;font-size:13px;color:#666;}
+.cr.tot{font-size:15px;font-weight:800;color:var(--navy);border-top:1px solid var(--lilac);padding-top:9px;margin-top:4px;}
+.cr.tot span:last-child{color:var(--blue);}
+
+/* Panel Testimonios */
+.tcard-sm{background:var(--bg);border-radius:12px;padding:1.1rem;margin-bottom:10px;border:1px solid var(--lilac);}
+.tc-stars{color:#f59e0b;font-size:12px;margin-bottom:6px;}
+.tc-q{font-size:13px;color:#555;line-height:1.6;margin-bottom:8px;font-style:italic;}
+.tc-auth{display:flex;align-items:center;gap:8px;}
+.tc-av{width:30px;height:30px;border-radius:50%;object-fit:cover;}
+.tc-n{font-size:12.5px;font-weight:700;color:var(--navy);}
+.tc-r{font-size:11px;color:#999;}
+
+/* Panel Ayuda */
+.help-card{background:var(--bg);border-radius:12px;padding:1.1rem;margin-bottom:10px;border-left:3px solid var(--blue);}
+.help-q{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:4px;}
+.help-a{font-size:12.5px;color:#666;line-height:1.55;}
+
+/* HOW */
+.how-sec{background:white;}
+.steps-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:13px;max-width:920px;margin:0 auto;}
+.sc{background:var(--bg);border-radius:14px;padding:1.3rem;border:1px solid var(--lilac);transition:all .3s;position:relative;overflow:hidden;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.sc:hover{transform:translateY(-4px);box-shadow:0 12px 38px rgba(102,105,244,.11);border-color:var(--violet);}
+.sc:hover::before{transform:scaleX(1);}
+.sc.ai{border-color:var(--violet);background:linear-gradient(135deg,#eae8ff,var(--bg));}
+.sn{width:32px;height:32px;border-radius:50%;background:var(--grad);color:white;font-size:13px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-bottom:11px;}
+.sc h4{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:5px;}
+.sc p{font-size:12.5px;color:#777;line-height:1.5;}
+
+/* COTIZADOR SECCION */
+.cot-sec{background:var(--navy);padding:5rem 2rem;}
+.cot-in{max-width:820px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:center;}
+.cot-l h2{font-size:clamp(22px,3.5vw,32px);font-weight:800;color:white;line-height:1.25;margin-bottom:.8rem;}
+.cot-l h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.cot-l p{font-size:14px;color:var(--lilac);line-height:1.7;}
+.cot-w{background:white;border-radius:20px;padding:1.8rem;box-shadow:0 20px 60px rgba(0,0,0,.25);}
+
+/* EVITA */
+.evita-sec{background:linear-gradient(145deg,#1a1d36,#212541,#2a2f60);padding:5.5rem 2rem;}
+.ev-wrap{max-width:860px;margin:0 auto;display:grid;grid-template-columns:1fr 1.1fr;gap:3rem;align-items:center;}
+.ev-info h2{font-size:clamp(24px,4vw,38px);font-weight:800;color:white;line-height:1.2;margin-bottom:1rem;}
+.ev-info h2 span{background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ev-info p{font-size:14px;color:var(--lilac);line-height:1.75;margin-bottom:1rem;}
+.ev-feats{display:flex;flex-direction:column;gap:9px;}
+.ef{display:flex;align-items:center;gap:11px;}
+.ef-ic{width:34px;height:34px;border-radius:9px;background:rgba(102,105,244,.2);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.ef-txt{font-size:13.5px;color:white;font-weight:500;}
+.chat-w{background:white;border-radius:20px;overflow:hidden;box-shadow:0 28px 70px rgba(0,0,0,.28);display:flex;flex-direction:column;height:490px;}
+.chat-hd{background:var(--grad);padding:.95rem 1.2rem;display:flex;align-items:center;gap:11px;}
+.ch-av{width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:15px;border:2px solid rgba(255,255,255,.4);overflow:hidden;}
+.ch-av img{width:100%;height:100%;object-fit:cover;}
+.ch-n{font-size:14.5px;font-weight:700;color:white;}
+.ch-st{font-size:11.5px;color:rgba(255,255,255,.72);display:flex;align-items:center;gap:5px;}
+.odot{width:7px;height:7px;border-radius:50%;background:#4ade80;display:inline-block;animation:pulse 1.5s infinite;}
+.prof-row{padding:.65rem 1.2rem;background:#f0efff;display:flex;gap:8px;align-items:center;}
+.prof-row span{font-size:12px;color:#777;font-weight:600;}
+.pb{border:1.5px solid var(--lilac);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s;background:white;color:var(--navy);}
+.pb.on{background:var(--blue);border-color:var(--blue);color:white;}
+.chat-msgs{flex:1;overflow-y:auto;padding:1.1rem;display:flex;flex-direction:column;gap:9px;background:#f8f7ff;}
+.chat-msgs::-webkit-scrollbar{width:3px;}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--lilac);border-radius:2px;}
+.mrow{display:flex;gap:8px;align-items:flex-end;}
+.mrow.u{flex-direction:row-reverse;}
+.mav{width:28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:white;flex-shrink:0;overflow:hidden;}
+.mav img{width:100%;height:100%;object-fit:cover;}
+.mav.ua{background:linear-gradient(135deg,var(--lilac),var(--violet));}
+.bb{max-width:77%;padding:10px 13px;border-radius:16px;font-size:13px;line-height:1.55;}
+.bb.bot{background:white;color:var(--navy);border:1px solid var(--lilac);border-bottom-left-radius:4px;}
+.bb.usr{background:var(--grad);color:white;border-bottom-right-radius:4px;}
+.bb.ty{background:white;border:1px solid var(--lilac);}
+.tdots{display:flex;gap:5px;align-items:center;height:18px;}
+.td{width:6px;height:6px;border-radius:50%;background:var(--violet);animation:tda .9s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.15s;}.td:nth-child(3){animation-delay:.3s;}
+@keyframes tda{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+.qr-row{display:flex;gap:6px;flex-wrap:wrap;padding:.65rem 1.1rem 0;background:#f8f7ff;}
+.qr{background:white;border:1.5px solid var(--lilac);border-radius:99px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--blue);cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;}
+.qr:hover{background:var(--bg);border-color:var(--blue);}
+.ci-area{padding:.85rem 1.2rem;background:white;border-top:1px solid #f0f0f0;display:flex;gap:9px;align-items:center;}
+.ci{flex:1;border:1.5px solid var(--lilac);border-radius:11px;padding:9px 13px;font-size:13.5px;color:var(--navy);font-family:inherit;outline:none;background:var(--bg);transition:border-color .2s;}
+.ci:focus{border-color:var(--blue);}
+.cs{width:39px;height:39px;border-radius:11px;background:var(--grad);border:none;color:white;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s;}
+.cs:hover{transform:scale(1.07);}
+
+/* PROVEEDORES */
+.prov-sec{background:var(--bg);}
+.provg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:13px;max-width:840px;margin:0 auto;}
+.pvcard{background:white;border-radius:16px;padding:1.3rem;border:1px solid var(--lilac);transition:all .3s;cursor:pointer;text-align:center;}
+.pvcard:hover{transform:translateY(-5px);box-shadow:0 14px 38px rgba(102,105,244,.12);border-color:var(--blue);}
+.pvi{font-size:30px;margin-bottom:9px;}
+.pvn{font-size:13.5px;font-weight:700;color:var(--navy);margin-bottom:3px;}
+.pvc{font-size:11.5px;color:#999;}
+.pvb{margin-top:9px;background:var(--bg);border:1px solid var(--lilac);border-radius:7px;padding:5px 11px;font-size:11.5px;font-weight:600;color:var(--blue);cursor:pointer;font-family:inherit;transition:all .2s;}
+.pvcard:hover .pvb{background:var(--blue);color:white;border-color:var(--blue);}
+
+/* FEATURES */
+.feat-sec{background:white;}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;max-width:880px;margin:0 auto;}
+.fcard{border:1.5px solid var(--lilac);border-radius:18px;padding:1.5rem;transition:all .3s;}
+.fcard:hover{transform:translateY(-5px);border-color:var(--blue);box-shadow:0 14px 46px rgba(102,105,244,.13);}
+.fi{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:14px;}
+.fip{background:#eae8ff;}.fig{background:#dcfce7;}.fia{background:#fef3c7;}.fir{background:#fce7f3;}
+.fcard h3{font-size:15.5px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+.fcard p{font-size:13px;color:#777;line-height:1.55;}
+
+/* DIFERENCIAL */
+.dif-sec{background:var(--bg);}
+.dg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;max-width:860px;margin:0 auto;}
+.dcard{background:white;border-radius:18px;padding:1.6rem;border:1px solid var(--lilac);transition:all .3s;}
+.dcard:hover{transform:translateY(-4px);box-shadow:0 12px 38px rgba(102,105,244,.1);border-color:var(--violet);}
+.di{font-size:28px;margin-bottom:13px;}
+.dcard h3{font-size:15.5px;font-weight:700;color:var(--navy);margin-bottom:7px;}
+.dcard p{font-size:13px;color:#777;line-height:1.55;}
+
+/* MISION/VISION */
+.mv-sec{background:var(--navy);padding:5rem 2rem;}
+.mvg{display:grid;grid-template-columns:1fr 1fr;gap:1.8rem;max-width:820px;margin:2rem auto 0;}
+.mvc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:1.8rem;transition:all .3s;}
+.mvc:hover{background:rgba(102,105,244,.1);border-color:rgba(102,105,244,.28);}
+.mvl{font-size:11px;font-weight:800;color:var(--violet);letter-spacing:2px;text-transform:uppercase;margin-bottom:.7rem;}
+.mvc h3{font-size:19px;font-weight:800;color:white;margin-bottom:.7rem;line-height:1.3;}
+.mvc p{font-size:13.5px;color:var(--lilac);line-height:1.65;}
+
+/* BENCH */
+.bench-sec{background:white;}
+.bwrap{max-width:800px;margin:0 auto;border-radius:18px;overflow:hidden;box-shadow:0 8px 38px rgba(102,105,244,.1);border:1px solid var(--lilac);}
+.brow{display:grid;grid-template-columns:2.2fr 1fr 1fr 1fr;}
+.bhd{background:var(--navy);}
+.bc{padding:13px 15px;font-size:13px;color:#666;background:white;border-bottom:1px solid #f0eeff;}
+.brow:last-child .bc{border-bottom:none;}
+.bhd .bc{color:rgba(255,255,255,.6);font-weight:600;font-size:12px;background:var(--navy);border-bottom:none;}
+.bc:first-child{color:var(--navy);font-weight:500;}
+.evh{background:var(--blue)!important;color:white!important;font-weight:800!important;}
+.evb{background:#eae8ff!important;color:var(--blue)!important;font-weight:700!important;}
+.yes{color:#16a34a;font-weight:700;}.no{color:#e24b4a;font-weight:700;}.par{color:#d97706;font-weight:600;}
+
+/* PRICING — INTERACTIVO */
+.price-sec{background:var(--bg);}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;max-width:780px;margin:0 auto;}
+.pcard{border:2px solid var(--lilac);border-radius:20px;padding:1.7rem;position:relative;transition:all .3s;background:white;cursor:pointer;}
+.pcard:hover{transform:translateY(-4px);}
+.pcard.sel{border-color:var(--blue);box-shadow:0 0 0 4px rgba(102,105,244,.12);transform:translateY(-4px);}
+.pcard.hot{border-color:var(--violet);}
+.pcard.hot.sel{border-color:var(--blue);}
+.hotb{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--grad);color:white;font-size:11px;font-weight:800;padding:4px 15px;border-radius:99px;white-space:nowrap;box-shadow:0 4px 14px rgba(102,105,244,.4);}
+.sel-badge{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;color:white;font-size:13px;opacity:0;transition:opacity .2s;}
+.pcard.sel .sel-badge{opacity:1;}
+.ptag{font-size:11px;color:#999;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+.pnum{font-size:36px;font-weight:800;color:var(--navy);letter-spacing:-1px;line-height:1;}
+.pnum sup{font-size:17px;vertical-align:super;font-weight:600;}
+.pper{font-size:12.5px;color:#999;font-weight:400;margin-left:2px;}
+.pdesc{font-size:13px;color:#888;margin:9px 0 16px;line-height:1.5;}
+.pul{list-style:none;margin-bottom:1.6rem;display:flex;flex-direction:column;gap:7px;}
+.pul li{font-size:13px;color:#555;display:flex;align-items:flex-start;gap:8px;line-height:1.4;}
+.ck{color:var(--blue);font-weight:800;font-size:13.5px;flex-shrink:0;margin-top:1px;}
+.btn-pg{width:100%;border:2px solid var(--lilac);border-radius:11px;padding:11px;font-size:14px;font-weight:700;color:var(--navy);background:transparent;cursor:pointer;font-family:inherit;transition:all .2s;}
+.btn-pg:hover,.pcard.sel .btn-pg{border-color:var(--blue);color:var(--blue);}
+.btn-pg-grad{width:100%;border:none;border-radius:11px;padding:12px;font-size:14px;font-weight:800;color:white;background:var(--grad);cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 6px 22px rgba(102,105,244,.4);}
+.btn-pg-grad:hover{opacity:.9;transform:translateY(-1px);}
+.price-cta{text-align:center;margin-top:2rem;}
+.btn-comprar{background:var(--grad);color:white;border:none;border-radius:14px;padding:15px 40px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 8px 28px rgba(102,105,244,.4);transition:all .2s;display:none;}
+.btn-comprar.show{display:inline-block;}
+.btn-comprar:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(102,105,244,.5);}
+
+/* MODAL PAGO */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:2000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;backdrop-filter:blur(4px);}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:white;border-radius:24px;width:min(500px,95vw);max-height:90vh;overflow-y:auto;box-shadow:0 30px 80px rgba(0,0,0,.3);transform:scale(.9) translateY(20px);transition:all .3s;}
+.modal-overlay.open .modal{transform:scale(1) translateY(0);}
+.modal-head{background:var(--grad);padding:1.5rem 1.8rem;border-radius:24px 24px 0 0;display:flex;align-items:center;justify-content:space-between;}
+.modal-head h3{font-size:18px;font-weight:800;color:white;}
+.modal-head p{font-size:13px;color:rgba(255,255,255,.75);margin-top:2px;}
+.modal-close{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);border:none;color:white;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-body{padding:1.8rem;}
+.plan-summary{background:var(--bg);border-radius:14px;padding:1.2rem;margin-bottom:1.5rem;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--lilac);}
+.ps-left{font-size:14px;font-weight:700;color:var(--navy);}
+.ps-left span{display:block;font-size:12px;color:#888;font-weight:400;margin-top:2px;}
+.ps-price{font-size:22px;font-weight:800;color:var(--blue);}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:12px;font-weight:700;color:#888;letter-spacing:.5px;margin-bottom:6px;display:block;}
+.form-input{width:100%;border:1.5px solid var(--lilac);border-radius:11px;padding:11px 14px;font-size:14px;color:var(--navy);font-family:inherit;outline:none;background:var(--bg);transition:border-color .2s;}
+.form-input:focus{border-color:var(--blue);}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card-icons{display:flex;gap:8px;margin-bottom:12px;}
+.card-icon{width:48px;height:30px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid var(--lilac);}
+.card-input-wrap{position:relative;}
+.card-input-wrap .form-input{padding-right:3rem;}
+.card-lock{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:16px;color:#999;}
+.btn-pagar{width:100%;background:var(--grad);border:none;border-radius:13px;padding:14px;font-size:15px;font-weight:800;color:white;cursor:pointer;font-family:inherit;margin-top:6px;box-shadow:0 6px 22px rgba(102,105,244,.4);transition:all .2s;}
+.btn-pagar:hover{opacity:.9;transform:translateY(-1px);}
+.btn-pagar:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.secure-note{text-align:center;font-size:12px;color:#999;margin-top:.8rem;display:flex;align-items:center;justify-content:center;gap:5px;}
+.modal-success{display:none;text-align:center;padding:2rem;}
+.modal-success.show{display:block;}
+.success-icon{font-size:64px;margin-bottom:1rem;}
+.modal-success h3{font-size:22px;font-weight:800;color:var(--navy);margin-bottom:.5rem;}
+.modal-success p{font-size:14px;color:#666;line-height:1.6;}
+
+/* TESTIMONIOS */
+.testi-sec{background:white;}
+.tg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;max-width:880px;margin:0 auto;}
+.tcard{background:var(--bg);border-radius:16px;padding:1.5rem;border:1px solid var(--lilac);transition:all .3s;}
+.tcard:hover{transform:translateY(-4px);box-shadow:0 12px 38px rgba(102,105,244,.1);border-color:var(--violet);}
+.tcimg{width:50px;height:50px;border-radius:50%;object-fit:cover;margin-bottom:12px;border:3px solid white;box-shadow:0 4px 12px rgba(102,105,244,.2);}
+.tcstars{color:#f59e0b;font-size:13px;margin-bottom:8px;letter-spacing:2px;}
+.tcq{font-size:13.5px;color:#555;line-height:1.65;margin-bottom:1rem;font-style:italic;}
+.tcn{font-size:13.5px;font-weight:700;color:var(--navy);}
+.tcr{font-size:12px;color:#999;margin-top:2px;}
+
+/* FAQ */
+.faq-sec{background:var(--bg);}
+.faq-wrap{max-width:720px;margin:0 auto;}
+.fi{background:white;border-radius:13px;border:1px solid var(--lilac);margin-bottom:9px;overflow:hidden;transition:border-color .2s;}
+.fi:hover{border-color:var(--violet);}
+.fiq{padding:1.1rem 1.3rem;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;}
+.fia{font-size:18px;color:var(--blue);transition:transform .3s;flex-shrink:0;}
+.fia.open{transform:rotate(45deg);}
+.fan{padding:0 1.3rem;max-height:0;overflow:hidden;transition:max-height .4s,padding .4s;}
+.fan.open{max-height:200px;padding:.2rem 1.3rem 1rem;}
+.fan p{font-size:13.5px;color:#666;line-height:1.65;}
+
+/* RISK */
+.risk-sec{background:var(--navy);padding:5rem 2rem;}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:820px;margin:2.5rem auto 0;}
+.rc{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:1.5rem;transition:all .3s;}
+.rc:hover{background:rgba(102,105,244,.1);border-color:rgba(102,105,244,.28);}
+.rct{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.rdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.rc h4{font-size:14.5px;font-weight:700;color:white;}
+.rc p{font-size:13px;color:var(--lilac);line-height:1.6;margin-bottom:12px;}
+.rp{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;padding:4px 11px;border-radius:99px;font-weight:700;}
+.rh{background:rgba(239,68,68,.15);color:#fca5a5;}.rl{background:rgba(34,197,94,.15);color:#6ee7b7;}
+.rplan{margin-top:10px;font-size:12.5px;color:var(--lilac);line-height:1.55;border-top:1px solid rgba(255,255,255,.07);padding-top:10px;}
+
+/* CTA */
+.cta-sec{padding:5.5rem 2rem;background:linear-gradient(145deg,var(--blue),#4547c2,#3a3bb5);text-align:center;position:relative;overflow:hidden;}
+.cta-sec::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/svg%3E");}
+.cta-sec h2{font-size:clamp(28px,5vw,50px);font-weight:800;color:white;margin-bottom:.9rem;letter-spacing:-.5px;position:relative;}
+.cta-sec p{font-size:16px;color:rgba(255,255,255,.78);margin:0 auto 2.2rem;line-height:1.65;position:relative;max-width:460px;}
+.btn-cw{background:white;color:var(--blue);border:none;border-radius:13px;padding:15px 38px;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:all .2s;position:relative;box-shadow:0 8px 36px rgba(0,0,0,.18);}
+.btn-cw:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 16px 48px rgba(0,0,0,.22);}
+.cta-note{font-size:12.5px;color:rgba(255,255,255,.48);margin-top:1rem;position:relative;}
+
+/* FOOTER */
+footer{background:#13152a;padding:3rem 2.5rem;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-start;gap:2rem;}
+.fb .fl{font-size:19px;font-weight:800;color:white;margin-bottom:.3rem;}
+.fb .fl span{color:var(--violet);}
+.fb p{font-size:13px;color:rgba(255,255,255,.3);max-width:210px;line-height:1.5;}
+.fc h4{font-size:11.5px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.7rem;}
+.fc a{display:block;font-size:13px;color:rgba(255,255,255,.48);text-decoration:none;margin-bottom:5px;transition:color .2s;}
+.fc a:hover{color:var(--violet);}
+.fbot{width:100%;border-top:1px solid rgba(255,255,255,.06);padding-top:1.4rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;align-items:center;}
+.fbot p{font-size:12px;color:rgba(255,255,255,.22);}
+.fclrs{display:flex;gap:6px;}
+.fclr{width:15px;height:15px;border-radius:50%;border:1px solid rgba(255,255,255,.12);}
+
+/* FAB */
+.fab{position:fixed;bottom:26px;right:26px;z-index:1999;}
+.fab-btn{width:60px;height:60px;border-radius:50%;background:var(--grad);border:none;color:white;font-size:25px;cursor:pointer;box-shadow:0 8px 30px rgba(102,105,244,.48);transition:transform .2s,box-shadow .2s;display:flex;align-items:center;justify-content:center;}
+.fab-btn:hover{transform:scale(1.08);box-shadow:0 14px 42px rgba(102,105,244,.58);}
+.fab-ring{position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(102,105,244,.3);animation:ring 2.2s ease-in-out infinite;}
+@keyframes ring{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:.3}}
+.fab-notif{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#ef4444;border:2.5px solid white;font-size:10px;font-weight:800;color:white;display:flex;align-items:center;justify-content:center;}
+.fab-pop{position:absolute;bottom:73px;right:0;width:330px;background:white;border-radius:20px;box-shadow:0 20px 56px rgba(0,0,0,.2);overflow:hidden;transform:scale(.8) translateY(18px);transform-origin:bottom right;opacity:0;pointer-events:none;transition:all .27s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;height:460px;}
+.fab-pop.open{transform:scale(1) translateY(0);opacity:1;pointer-events:all;}
+.fp-hd{background:var(--grad);padding:.85rem 1.1rem;display:flex;align-items:center;gap:10px;}
+.fp-av{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-weight:800;color:white;font-size:13px;border:2px solid rgba(255,255,255,.35);overflow:hidden;}
+.fp-av img{width:100%;height:100%;object-fit:cover;}
+.fp-n{font-size:13.5px;font-weight:700;color:white;}
+.fp-st{font-size:11px;color:rgba(255,255,255,.7);display:flex;align-items:center;gap:4px;}
+.fp-close{margin-left:auto;background:rgba(255,255,255,.2);border:none;color:white;width:25px;height:25px;border-radius:50%;cursor:pointer;font-size:13px;display:flex;align-items:center;justify-content:center;}
+.fp-msgs{flex:1;overflow-y:auto;padding:.9rem;background:#f8f7ff;display:flex;flex-direction:column;gap:8px;}
+.fp-msgs::-webkit-scrollbar{width:3px;}
+.fp-msgs::-webkit-scrollbar-thumb{background:var(--lilac);border-radius:2px;}
+.fp-qr{display:flex;gap:5px;flex-wrap:wrap;padding:.6rem .9rem 0;background:#f8f7ff;}
+.fp-qbtn{background:white;border:1.5px solid var(--lilac);border-radius:99px;padding:4px 10px;font-size:11.5px;font-weight:600;color:var(--blue);cursor:pointer;font-family:inherit;transition:all .2s;white-space:nowrap;}
+.fp-qbtn:hover{background:var(--bg);border-color:var(--blue);}
+.fp-in-area{padding:.75rem .9rem;background:white;border-top:1px solid #f0f0f0;display:flex;gap:8px;align-items:center;}
+.fp-in{flex:1;border:1.5px solid var(--lilac);border-radius:10px;padding:8px 12px;font-size:13px;color:var(--navy);font-family:inherit;outline:none;background:var(--bg);transition:border-color .2s;}
+.fp-in:focus{border-color:var(--blue);}
+.fp-send{width:34px;height:34px;border-radius:9px;background:var(--grad);border:none;color:white;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s;}
+.fp-send:hover{transform:scale(1.08);}
+
+@media(max-width:680px){
+  .mcards,.cot-in,.ev-wrap,.mvg,.rg,.form-row{grid-template-columns:1fr;}
+  nav .nav-links a{display:none;}
+  .fab-pop{width:calc(100vw - 28px);right:-12px;}
+  .stat{padding:.8rem 1.4rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="#">
+    <!-- Logo versión nav: símbolo del v2 + wordmark adaptado -->
+    <svg class="nav-logo-svg" width="130" height="36" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg">
+      <!-- Símbolo (extraído del v2, centrado en 50,50, escala reducida) -->
+      <!-- Arco exterior -->
+      <path d="M 50 22 A 28 28 0 1 1 72 65" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" class="nav-sym-stroke"/>
+      <!-- Arco medio violeta -->
+      <path d="M 23 45 A 19 19 0 0 1 50 20" fill="none" stroke="#aa9df8" stroke-width="2" stroke-linecap="round"/>
+      <!-- Arco interior tenue -->
+      <path d="M 50 34 A 11 11 0 1 1 58 55" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.35" class="nav-sym-stroke"/>
+      <!-- Punto central -->
+      <circle cx="50" cy="50" r="5" fill="#6669f4"/>
+      <!-- Check -->
+      <polyline points="47,50 49.5,53 54,46" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Nodos satélite -->
+      <circle cx="50" cy="22" r="3" fill="#aa9df8"/>
+      <circle cx="22" cy="50" r="2.5" fill="white" opacity="0.8" class="nav-sym-fill"/>
+      <!-- Líneas conexión -->
+      <line x1="50" y1="45" x2="50" y2="26" stroke="white" stroke-width="0.7" opacity="0.3" class="nav-sym-stroke"/>
+      <line x1="45" y1="50" x2="26" y2="50" stroke="white" stroke-width="0.7" opacity="0.3" class="nav-sym-stroke"/>
+      <!-- Wordmark: "event" light + "ify" blue -->
+      <text x="86" y="62" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="200" fill="white" class="nav-word-light">event</text>
+      <text x="198" y="62" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="500" fill="#6669f4">ify</text>
+    </svg>
+  </a>
+  <div class="nav-links">
+    <a href="#app-sec">Funciones</a>
+    <a href="#cot-sec">Cotizador</a>
+    <a href="#evita-sec">Tefita IA</a>
+    <a href="#precios">Precios</a>
+    <a href="#faq-sec">FAQ</a>
+    <button class="nav-btn" onclick="openFab()">Hablar con Tefita ✨</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+
+  <!-- LOGO GRANDE CENTRADO — v2 real, adaptado hero blanco-sobre-oscuro -->
+  <div class="hero-logo-wrap">
+    <svg class="hero-logo-svg" viewBox="0 0 680 220" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <mask id="hero-txt-mask" maskUnits="userSpaceOnUse">
+          <rect x="0" y="0" width="680" height="220" fill="white"/>
+          <rect x="172" y="72" width="180" height="65" fill="black" rx="2"/>
+          <rect x="174" y="146" width="314" height="16" fill="black" rx="2"/>
+        </mask>
+        <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#6669f4"/>
+          <stop offset="100%" stop-color="#aa9df8"/>
+        </linearGradient>
+      </defs>
+      <!-- Símbolo — centro en 100,110, todo en blanco/violeta para fondo oscuro -->
+      <path d="M 100 55 A 55 55 0 1 1 143 133" mask="url(#hero-txt-mask)" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.9"/>
+      <path d="M 58 88 A 38 38 0 0 1 100 52" fill="none" stroke="#aa9df8" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 100 80 A 22 22 0 1 1 115 120" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" opacity="0.35"/>
+      <circle cx="100" cy="110" r="7" fill="#6669f4"/>
+      <polyline points="96,110 99,114 105,106" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="100" cy="55" r="4.5" fill="#aa9df8"/>
+      <circle cx="55" cy="110" r="3.5" fill="white" opacity="0.8"/>
+      <circle cx="143" cy="133" r="3" fill="white" opacity="0.4"/>
+      <circle cx="58" cy="88" r="2.5" fill="#aa9df8" opacity="0.6"/>
+      <line x1="100" y1="103" x2="100" y2="60" stroke="white" stroke-width="0.8" opacity="0.3"/>
+      <line x1="93" y1="110" x2="59" y2="110" stroke="white" stroke-width="0.8" opacity="0.3"/>
+      <!-- Wordmark — "event" blanco ultralight, "ify" azul -->
+      <text x="176" y="133" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="54" font-weight="200" fill="white">event<tspan font-weight="500" fill="#6669f4">ify</tspan></text>
+      <!-- Línea divisora -->
+      <line x1="176" y1="147" x2="620" y2="147" mask="url(#hero-txt-mask)" stroke="url(#hero-grad)" stroke-width="0.6" opacity="0.35"/>
+      <!-- Tagline -->
+      <text x="178" y="168" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="11" font-weight="400" fill="#aa9df8" letter-spacing="2">TU EVENTO, SIN COMPLICACIONES</text>
+    </svg>
+  </div>
+
+  <div class="hero-pill"><span class="pd"></span> La plataforma de eventos para organizadores reales</div>
+  <h1>Organizá tu evento<br>en un solo lugar,<br><span class="hl">sin estrés.</span></h1>
+  <p class="hero-sub">Eventify centraliza invitados, presupuesto, proveedores y cronogramas. Y suma a Tefita, la IA que te guía en cada decisión — pensada para vos, no para corporaciones.</p>
+  <div class="hero-btns">
+    <button class="btn-w" onclick="openFab()">Crear mi evento gratis ✨</button>
+    <button class="btn-gw" onclick="document.getElementById('app-sec').scrollIntoView({behavior:'smooth'})">Ver cómo funciona →</button>
+  </div>
+  <div class="hero-mock-wrap">
+    <div class="hero-mock">
+      <div class="mdots"><div class="mdot" style="background:#ef4444"></div><div class="mdot" style="background:#f59e0b"></div><div class="mdot" style="background:#22c55e"></div></div>
+      <div class="mock-hd"><span class="mock-ht">Mis eventos · Noviembre 2025</span><span class="badge-a">3 activos</span></div>
+      <div class="mcards">
+        <div class="mc"><div class="mt tn">Próximo</div><div class="mn">Cumpleaños de Laura</div><div class="mi">45 inv · 28 nov</div><div class="mb"><div class="mf" style="width:70%;background:#6669f4;"></div></div></div>
+        <div class="mc"><div class="mt ta">Activo</div><div class="mn">Lanzamiento marca</div><div class="mi">120 inv · 5 dic</div><div class="mb"><div class="mf" style="width:45%;background:#22c55e;"></div></div></div>
+        <div class="mc"><div class="mt td">Borrador</div><div class="mn">Workshop diseño</div><div class="mi">20 cupos · 15 dic</div><div class="mb"><div class="mf" style="width:20%;background:#f59e0b;"></div></div></div>
+      </div>
+      <div class="mock-ev"><div class="eav">E</div><div class="etxt"><strong>Tefita IA:</strong> Te conviene reservar catering esta semana para evitar el aumento de precios. ¿Comparo opciones?</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat"><div class="stn"><span id="s1">0</span>K+</div><div class="stl">Eventos organizados</div></div>
+  <div class="stat"><div class="stn"><span id="s2">0</span>%</div><div class="stl">Reducción de estrés</div></div>
+  <div class="stat"><div class="stn"><span id="s3">0</span>K+</div><div class="stl">Proveedores disponibles</div></div>
+  <div class="stat"><div class="stn"><span id="s4">0</span>★</div><div class="stl">Calificación promedio</div></div>
+</div>
+
+<!-- PROBLEM -->
+<section class="prob-sec reveal">
+  <div style="max-width:880px;margin:0 auto">
+    <p class="sl" style="color:var(--violet)">El problema</p>
+    <h2 class="st" style="color:white">La organización de eventos está rota.</h2>
+    <p class="ss" style="color:var(--lilac)">Hoy planificar un evento significa abrir 6 apps al mismo tiempo, perder información crítica y llegar agotada al gran día.</p>
+    <div class="pgrid">
+      <div class="pc"><div class="pe">📱</div><h4>Herramientas dispersas</h4><p>WhatsApp, notas, planillas, Instagram... sin conexión. Todo se pierde.</p></div>
+      <div class="pc"><div class="pe">😰</div><h4>Estrés constante</h4><p>Miedo a olvidar algo importante. Proveedores que no confirman. Presupuesto descontrolado.</p></div>
+      <div class="pc"><div class="pe">⏰</div><h4>Pérdida de tiempo</h4><p>Horas buscando proveedores, comparando precios y coordinando manualmente.</p></div>
+      <div class="pc"><div class="pe">📊</div><h4>Sin visibilidad</h4><p>No sabés cuánto gastaste, cuántos confirmaron ni qué falta resolver.</p></div>
+    </div>
+    <div class="arr">↓</div>
+  </div>
+</section>
+
+<!-- APP INTERACTIVA -->
+<section class="sec app-sec reveal" id="app-sec">
+  <p class="sl">La plataforma</p>
+  <h2 class="st">Eventify funciona como una app con distintas áreas.</h2>
+  <p class="ss">Tocá cada sección para explorar cómo se organiza todo sin salir de la plataforma.</p>
+  <div class="app-wrap">
+    <div class="app-mock">
+      <div class="app-tabs">
+        <div class="atab on" onclick="showTab('org',this)">Organización</div>
+        <div class="atab" onclick="showTab('cot',this)">Cotización</div>
+        <div class="atab" onclick="showTab('tes',this)">Testimonios</div>
+        <div class="atab" onclick="showTab('hlp',this)">Ayuda</div>
+      </div>
+      <div class="app-content">
+
+        <!-- ORGANIZACIÓN -->
+        <div class="app-panel on" id="panel-org">
+          <div class="org-event">
+            <div class="oe-top"><span class="oe-name">Cumpleaños de Martina</span><span class="oe-pct" id="pct">68% listo</span></div>
+            <div class="oe-stats">
+              <div class="oes"><div class="oes-label">Invitados</div><div class="oes-val" id="inv-val">86/120</div></div>
+              <div class="oes"><div class="oes-label">Presupuesto</div><div class="oes-val">$890K</div></div>
+              <div class="oes"><div class="oes-label">Tareas</div><div class="oes-val" id="task-count">14/20</div></div>
+              <div class="oes"><div class="oes-label">Proveedores</div><div class="oes-val">5 ok</div></div>
+            </div>
+            <div class="task-list" id="taskList">
+              <div class="task" onclick="toggleTask(this)"><div class="task-cb">✓</div><span>Confirmar catering</span></div>
+              <div class="task" onclick="toggleTask(this)"><div class="task-cb">✓</div><span>Enviar invitaciones digitales</span></div>
+              <div class="task done" onclick="toggleTask(this)"><div class="task-cb" style="background:var(--blue);border-color:var(--blue);color:white;font-size:11px;">✓</div><span>Reservar salón</span></div>
+              <div class="task" onclick="toggleTask(this)"><div class="task-cb">✓</div><span>Contratar DJ</span></div>
+              <div class="task done" onclick="toggleTask(this)"><div class="task-cb" style="background:var(--blue);border-color:var(--blue);color:white;font-size:11px;">✓</div><span>Definir decoración</span></div>
+            </div>
+            <button class="add-task" onclick="addTask()">+ Agregar tarea</button>
+          </div>
+        </div>
+
+        <!-- COTIZACIÓN APP -->
+        <div class="app-panel" id="panel-cot">
+          <p style="font-size:13px;color:#888;margin-bottom:14px;">Calculá el presupuesto estimado para tu evento en segundos.</p>
+          <div class="cot-form">
+            <div>
+              <label class="cf-label">Tipo de evento</label>
+              <select class="cf-sel" id="a-evtype" onchange="calcApp()">
+                <option value="1">🎂 Cumpleaños</option>
+                <option value="1.8">💍 Casamiento</option>
+                <option value="1.4">💼 Evento corporativo</option>
+              </select>
+            </div>
+            <div>
+              <label class="cf-label">Invitados: <span id="a-invv" style="color:var(--blue);font-weight:700">80</span></label>
+              <div class="range-row">
+                <input type="range" class="cf-range" id="a-inv" min="10" max="300" value="80" oninput="document.getElementById('a-invv').textContent=this.value;calcApp()"/>
+                <span class="rval" id="a-invs">80</span>
+              </div>
+            </div>
+            <div>
+              <label class="cf-label">Servicios</label>
+              <div class="cot-checks">
+                <label class="chk"><input type="checkbox" id="a-c1" checked onchange="calcApp()"> 🍽 Catering</label>
+                <label class="chk"><input type="checkbox" id="a-c2" checked onchange="calcApp()"> 🎵 DJ & sonido</label>
+                <label class="chk"><input type="checkbox" id="a-c3" checked onchange="calcApp()"> 🌸 Decoración</label>
+                <label class="chk"><input type="checkbox" id="a-c4" onchange="calcApp()"> 📸 Fotografía</label>
+                <label class="chk"><input type="checkbox" id="a-c5" onchange="calcApp()"> 🏛 Sede / Salón</label>
+                <label class="chk"><input type="checkbox" id="a-c6" onchange="calcApp()"> 🎤 Animación</label>
+              </div>
+            </div>
+            <div class="cot-res">
+              <div class="cot-rows" id="a-breakdown"></div>
+              <div class="cr tot"><span>Total estimado</span><span id="a-total">$0</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TESTIMONIOS APP -->
+        <div class="app-panel" id="panel-tes">
+          <div class="tcard-sm"><div class="tc-stars">★★★★★</div><p class="tc-q">"Sentí que tenía una amiga guiándome en cada decisión."</p><div class="tc-auth"><img class="tc-av" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=100&auto=format&fit=crop" alt=""/><div><div class="tc-n">Martina López</div><div class="tc-r">Usuaria Eventify</div></div></div></div>
+          <div class="tcard-sm"><div class="tc-stars">★★★★★</div><p class="tc-q">"La IA me sirvió para saber qué tareas resolver primero. Increíble."</p><div class="tc-auth"><img class="tc-av" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=100&auto=format&fit=crop" alt=""/><div><div class="tc-n">Sofía Ramírez</div><div class="tc-r">Emprendedora gastronómica</div></div></div></div>
+          <div class="tcard-sm"><div class="tc-stars">★★★★★</div><p class="tc-q">"Clara, visual y fácil de usar desde el primer día. La recomiendo."</p><div class="tc-auth"><img class="tc-av" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=100&auto=format&fit=crop" alt=""/><div><div class="tc-n">Lucas Fernández</div><div class="tc-r">Organizador independiente</div></div></div></div>
+        </div>
+
+        <!-- AYUDA APP -->
+        <div class="app-panel" id="panel-hlp">
+          <div class="mock-ev" style="margin-bottom:12px;"><div class="eav">E</div><div class="etxt" style="color:var(--navy);"><strong style="color:var(--blue)">Tefita:</strong> "Primero definamos fecha, invitados y presupuesto. Después te recomiendo proveedores."</div></div>
+          <div class="help-card"><div class="help-q">¿Cómo funciona la IA?</div><div class="help-a">Optimiza tareas y presupuesto automáticamente según tu tipo de evento.</div></div>
+          <div class="help-card"><div class="help-q">¿Qué eventos puedo organizar?</div><div class="help-a">Eventos sociales, laborales y corporativos de cualquier escala.</div></div>
+          <div class="help-card"><div class="help-q">¿Puedo comparar proveedores?</div><div class="help-a">Sí, con reseñas reales y filtros personalizados por precio y categoría.</div></div>
+          <button class="add-task" onclick="openFab()">Hablar con Tefita en vivo ✨</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="sec how-sec reveal">
+  <p class="sl">Flujo de servicio</p>
+  <h2 class="st">Así funciona Eventify</h2>
+  <p class="ss">11 pasos, un solo lugar. Desde el registro hasta la fidelización post-evento.</p>
+  <div class="steps-g">
+    <div class="sc"><div class="sn">01</div><h4>Registrarte</h4><p>Creás tu cuenta en minutos y configurás tu perfil de organizador.</p></div>
+    <div class="sc"><div class="sn">02</div><h4>Tipo de evento</h4><p>Social, corporativo o híbrido. Eventify se adapta a vos.</p></div>
+    <div class="sc"><div class="sn">03</div><h4>Fecha y detalles</h4><p>Definís fecha, cantidad de invitados y presupuesto disponible.</p></div>
+    <div class="sc ai"><div class="sn">04</div><h4>✨ IA genera tu plan</h4><p>Tefita organiza automáticamente tu cronograma, tareas y prioridades.</p></div>
+    <div class="sc"><div class="sn">05</div><h4>Encontrás proveedores</h4><p>Catering, DJ, fotografía, decoración y sedes en un solo lugar.</p></div>
+    <div class="sc"><div class="sn">06</div><h4>Contratás fácil</h4><p>Seleccionás y confirmás directamente desde la plataforma.</p></div>
+    <div class="sc"><div class="sn">07</div><h4>Gestión invitados</h4><p>RSVP, check-in digital y seguimiento en tiempo real.</p></div>
+    <div class="sc"><div class="sn">08</div><h4>Seguimiento</h4><p>Visualizás y controlás cada tarea y actividad del evento.</p></div>
+    <div class="sc"><div class="sn">09</div><h4>El evento</h4><p>Todo organizado. Finalmente, disfrutás el momento.</p></div>
+    <div class="sc"><div class="sn">10</div><h4>Evaluación</h4><p>Calificás proveedores y compartís tu experiencia.</p></div>
+    <div class="sc"><div class="sn">11</div><h4>Fidelización</h4><p>Tu historial guardado. El próximo evento arranca desde adelante.</p></div>
+  </div>
+</section>
+
+<!-- COTIZADOR SECCION -->
+<section class="cot-sec reveal" id="cot-sec">
+  <div class="cot-in">
+    <div class="cot-l">
+      <p class="sl" style="text-align:left;color:var(--violet)">Cotizador interactivo</p>
+      <h2>Calculá tu evento en <span>segundos.</span></h2>
+      <p>Estimá gastos por cantidad de invitados, tipo de evento y servicios elegidos. El presupuesto se actualiza en tiempo real.</p>
+    </div>
+    <div class="cot-w">
+      <div class="cot-form">
+        <div><label class="cf-label">Tipo de evento</label><select class="cf-sel" id="g-evtype" onchange="calcG()"><option value="1">🎂 Cumpleaños</option><option value="1.8">💍 Casamiento</option><option value="1.4">💼 Evento corporativo</option></select></div>
+        <div><label class="cf-label">Invitados: <span id="g-invv" style="color:var(--blue);font-weight:700">80</span></label><div class="range-row"><input type="range" class="cf-range" id="g-inv" min="10" max="300" value="80" oninput="document.getElementById('g-invv').textContent=this.value;calcG()"/><span class="rval" id="g-invs">80</span></div></div>
+        <div><label class="cf-label">Servicios</label><div class="cot-checks"><label class="chk"><input type="checkbox" id="g-c1" checked onchange="calcG()"> 🍽 Catering</label><label class="chk"><input type="checkbox" id="g-c2" checked onchange="calcG()"> 🎵 DJ & sonido</label><label class="chk"><input type="checkbox" id="g-c3" checked onchange="calcG()"> 🌸 Decoración</label><label class="chk"><input type="checkbox" id="g-c4" onchange="calcG()"> 📸 Fotografía</label><label class="chk"><input type="checkbox" id="g-c5" onchange="calcG()"> 🏛 Sede / Salón</label><label class="chk"><input type="checkbox" id="g-c6" onchange="calcG()"> 🎤 Animación</label></div></div>
+        <div class="cot-res"><div class="cot-rows" id="g-breakdown"></div><div class="cr tot"><span>Total estimado</span><span id="g-total">$0</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EVITA CHAT -->
+<section class="evita-sec reveal" id="evita-sec">
+  <div class="ev-wrap">
+    <div class="ev-info">
+      <p class="sl" style="text-align:left;color:var(--violet)">Asistente IA</p>
+      <h2>Conocé a <span>Tefita,</span><br>tu amiga organizadora.</h2>
+      <p>Tefita es el bot de Eventify: una asistente cercana, amable y práctica. Ordena tareas, recuerda pendientes, sugiere proveedores y responde dudas en tiempo real.</p>
+      <p>Podés elegir si prefierés que tenga perfil femenino o masculino — siempre con un tono claro, amable y empático.</p>
+      <div class="ev-feats">
+        <div class="ef"><div class="ef-ic">🎯</div><span class="ef-txt">Sugiere proveedores según tu presupuesto</span></div>
+        <div class="ef"><div class="ef-ic">💰</div><span class="ef-txt">Optimiza tu presupuesto en tiempo real</span></div>
+        <div class="ef"><div class="ef-ic">📋</div><span class="ef-txt">Genera listas y recordatorios automáticos</span></div>
+        <div class="ef"><div class="ef-ic">🤖</div><span class="ef-txt">Guía decisiones clave en cada etapa</span></div>
+      </div>
+    </div>
+    <div class="chat-w">
+      <div class="chat-hd">
+        <div class="ch-av"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop" alt="Tefita"/></div>
+        <div><div class="ch-n" id="mainName">Tefita · Asistente Eventify</div><div class="ch-st"><span class="odot"></span>En línea · responde al instante</div></div>
+      </div>
+      <div class="prof-row">
+        <span>Perfil:</span>
+        <button class="pb on" id="pbf" onclick="setProf('f')">👩 Femenino</button>
+        <button class="pb" id="pbm" onclick="setProf('m')">👨 Masculino</button>
+      </div>
+      <div class="chat-msgs" id="mainMsgs"></div>
+      <div class="qr-row" id="mainQR"></div>
+      <div class="ci-area">
+        <input class="ci" id="mainIn" placeholder="Escribile a Tefita..." onkeydown="if(event.key==='Enter')sendMain()"/>
+        <button class="cs" onclick="sendMain()">➤</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROVEEDORES -->
+<section class="sec prov-sec reveal">
+  <p class="sl">Ecosistema Eventify</p>
+  <h2 class="st">Conectá con proveedores sin perder tiempo.</h2>
+  <p class="ss">Catering, fotografía, decoración, sedes, DJs y más — en una sola plataforma para comparar, elegir y avanzar.</p>
+  <div class="provg">
+    <div class="pvcard"><div class="pvi">🍽</div><div class="pvn">Catering</div><div class="pvc">+140 opciones</div><button class="pvb">Ver opciones</button></div>
+    <div class="pvcard"><div class="pvi">📸</div><div class="pvn">Fotografía</div><div class="pvc">+90 opciones</div><button class="pvb">Ver opciones</button></div>
+    <div class="pvcard"><div class="pvi">🌸</div><div class="pvn">Decoración</div><div class="pvc">+75 opciones</div><button class="pvb">Ver opciones</button></div>
+    <div class="pvcard"><div class="pvi">🏛</div><div class="pvn">Sedes</div><div class="pvc">+55 opciones</div><button class="pvb">Ver opciones</button></div>
+    <div class="pvcard"><div class="pvi">🎵</div><div class="pvn">DJ & sonido</div><div class="pvc">+80 opciones</div><button class="pvb">Ver opciones</button></div>
+    <div class="pvcard"><div class="pvi">🎤</div><div class="pvn">Animación</div><div class="pvc">+40 opciones</div><button class="pvb">Ver opciones</button></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="sec feat-sec reveal">
+  <p class="sl">Funciones</p>
+  <h2 class="st">Menos estrés. Más control. Mejor experiencia.</h2>
+  <p class="ss">No es solo una app de organización. Es un ecosistema pensado para que cada momento del evento cuente.</p>
+  <div class="fg">
+    <div class="fcard"><div class="fi fip">📅</div><h3>Todo centralizado</h3><p>Gestioná invitados, tareas, presupuesto y proveedores sin saltar entre apps.</p></div>
+    <div class="fcard"><div class="fi fig">🤝</div><h3>Decisiones simples</h3><p>Compará opciones, reseñas y precios para elegir con más claridad y menos tiempo.</p></div>
+    <div class="fcard"><div class="fi fia">📊</div><h3>Análisis en tiempo real</h3><p>Métricas de confirmación, gasto vs. presupuesto y estado del evento al instante.</p></div>
+    <div class="fcard"><div class="fi fir">✉️</div><h3>Planificación adaptable</h3><p>La app se ajusta a eventos sociales, laborales o emprendimientos pequeños sin complicaciones.</p></div>
+  </div>
+</section>
+
+<!-- DIFERENCIAL -->
+<section class="sec dif-sec reveal">
+  <p class="sl">Nuestro diferencial</p>
+  <h2 class="st">¿En qué nos destacamos frente a la competencia?</h2>
+  <p class="ss">El espacio que WeddingWire y Cvent dejaron vacío: accesible, inteligente y centrada en el usuario real.</p>
+  <div class="dg">
+    <div class="dcard"><div class="di">🎯</div><h3>Más simple que las plataformas corporativas</h3><p>Pensada para usuarios individuales, emprendedores y pequeñas empresas, sin procesos complejos ni interfaces difíciles de usar.</p></div>
+    <div class="dcard"><div class="di">✨</div><h3>Experiencia personalizada</h3><p>La plataforma se adapta a distintos tipos de eventos y usuarios, ofreciendo recomendaciones según cada necesidad específica.</p></div>
+    <div class="dcard"><div class="di">🤖</div><h3>IA como asistente de organización</h3><p>La inteligencia artificial ayuda a priorizar tareas, optimizar presupuesto y sugerir proveedores — sin reemplazar al usuario.</p></div>
+  </div>
+</section>
+
+<!-- MISION / VISION -->
+<section class="mv-sec reveal">
+  <p class="sl" style="color:var(--violet)">Identidad</p>
+  <h2 class="st" style="color:white">Quiénes somos.</h2>
+  <p class="ss" style="color:var(--lilac)">Nuestra razón de existir y hacia dónde vamos.</p>
+  <div class="mvg">
+    <div class="mvc"><div class="mvl">Misión</div><h3>Simplificar la organización de eventos.</h3><p>Brindamos una plataforma tecnológica que acompaña a cada usuario durante todo el proceso, reduciendo el estrés, ordenando las tareas y optimizando su tiempo mediante inteligencia artificial.</p></div>
+    <div class="mvc"><div class="mvl">Visión</div><h3>Ser la plataforma de referencia en eventos.</h3><p>Convertirnos en la solución reconocida en Argentina y la región, transformando una experiencia compleja en algo simple, accesible y memorable para cualquier tipo de organizador.</p></div>
+  </div>
+</section>
+
+<!-- BENCH -->
+<section class="sec bench-sec reveal">
+  <p class="sl">Benchmarking</p>
+  <h2 class="st">Por qué elegir Eventify</h2>
+  <p class="ss">Ni demasiado corporativo, ni demasiado básico. El espacio intermedio que la competencia dejó vacío.</p>
+  <div class="bwrap">
+    <div class="brow bhd"><div class="bc">Atributo</div><div class="bc evh">✦ Eventify</div><div class="bc">WeddingWire</div><div class="bc">Cvent</div></div>
+    <div class="brow"><div class="bc">Usuarios individuales y pymes</div><div class="bc evb yes">✓ Sí</div><div class="bc par">Parcial</div><div class="bc no">✗ No</div></div>
+    <div class="brow"><div class="bc">Inteligencia Artificial integrada</div><div class="bc evb yes">✓ Sí</div><div class="bc no">✗ No</div><div class="bc par">Parcial</div></div>
+    <div class="brow"><div class="bc">Todo tipo de eventos</div><div class="bc evb yes">✓ Sí</div><div class="bc no">Solo bodas</div><div class="bc par">Solo corp.</div></div>
+    <div class="brow"><div class="bc">Experiencia simple e intuitiva</div><div class="bc evb yes">✓ Sí</div><div class="bc par">Media</div><div class="bc no">✗ Compleja</div></div>
+    <div class="brow"><div class="bc">Plan gratuito disponible</div><div class="bc evb yes">✓ Sí</div><div class="bc par">Limitado</div><div class="bc no">✗ No</div></div>
+    <div class="brow"><div class="bc">Asistente IA personalizada</div><div class="bc evb yes">✓ Tefita</div><div class="bc no">✗ No</div><div class="bc no">✗ No</div></div>
+  </div>
+</section>
+
+<!-- PRICING INTERACTIVO -->
+<section class="sec price-sec reveal" id="precios">
+  <p class="sl">Planes</p>
+  <h2 class="st">Empezá gratis. Escalá cuando crezcas.</h2>
+  <p class="ss">Tocá el plan que mejor te representa para ver más detalles y comprarlo.</p>
+  <div class="pgrid">
+    <div class="pcard" id="plan-low" onclick="selPlan('low')">
+      <div class="sel-badge">✓</div>
+      <div class="ptag">Plan Low</div>
+      <div class="pnum"><sup>$</sup>3.000<span class="pper">/mes</span></div>
+      <p class="pdesc">Para quienes empiezan a organizar eventos de manera personal o esporádica.</p>
+      <ul class="pul">
+        <li><span class="ck">✓</span>Hasta 60 suscriptores</li>
+        <li><span class="ck">✓</span>Gestión básica de invitados</li>
+        <li><span class="ck">✓</span>Soporte al cliente incluido</li>
+        <li><span class="ck">✓</span>Acceso a red de proveedores</li>
+        <li><span class="ck">✓</span>Tefita IA (funciones básicas)</li>
+      </ul>
+      <button class="btn-pg">Elegir Plan Low</button>
+    </div>
+    <div class="pcard hot" id="plan-premium" onclick="selPlan('premium')">
+      <div class="hotb">✦ Más popular</div>
+      <div class="sel-badge">✓</div>
+      <div class="ptag">Plan Premium</div>
+      <div class="pnum"><sup>$</sup>10.000<span class="pper">/mes</span></div>
+      <p class="pdesc">Para emprendedores y organizadores independientes en crecimiento.</p>
+      <ul class="pul">
+        <li><span class="ck">✓</span>Hasta 30 eventos simultáneos</li>
+        <li><span class="ck">✓</span>500 invitados por evento</li>
+        <li><span class="ck">✓</span>Tefita IA completa + personalizada</li>
+        <li><span class="ck">✓</span>Comisión de proveedores reducida</li>
+        <li><span class="ck">✓</span>Análisis y métricas avanzadas</li>
+        <li><span class="ck">✓</span>Soporte prioritario 24/7</li>
+      </ul>
+      <button class="btn-pg-grad">Elegir Premium</button>
+    </div>
+    <div class="pcard" id="plan-pro" onclick="selPlan('pro')">
+      <div class="sel-badge">✓</div>
+      <div class="ptag">Plan Pro Event</div>
+      <div class="pnum"><sup>$</sup>30.000<span class="pper">/mes</span></div>
+      <p class="pdesc">Para empresas y profesionales con eventos de gran escala.</p>
+      <ul class="pul">
+        <li><span class="ck">✓</span>Hasta 10 eventos activos</li>
+        <li><span class="ck">✓</span>Red de proveedores premium</li>
+        <li><span class="ck">✓</span>Asistencia personalizada completa</li>
+        <li><span class="ck">✓</span>Integraciones y API disponibles</li>
+        <li><span class="ck">✓</span>SLA garantizado</li>
+        <li><span class="ck">✓</span>Ejecutivo de cuenta dedicado</li>
+      </ul>
+      <button class="btn-pg">Elegir Pro Event</button>
+    </div>
+  </div>
+  <div class="price-cta">
+    <button class="btn-comprar" id="btn-comprar" onclick="openModal()">Comprar plan seleccionado 🛒</button>
+    <p id="price-hint" style="margin-top:.8rem;font-size:13px;color:#888;display:none">Seleccioná un plan para continuar con la compra</p>
+  </div>
+</section>
+
+<!-- TESTIMONIOS -->
+<section class="sec testi-sec reveal">
+  <p class="sl">Testimonios</p>
+  <h2 class="st">Personas que organizaron mejor con Eventify.</h2>
+  <p class="ss">Organizadores reales. Eventos reales. Resultados que hablan solos.</p>
+  <div class="tg">
+    <div class="tcard"><img class="tcimg" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop" alt="Martina"/><div class="tcstars">★★★★★</div><p class="tcq">"Antes tenía todo separado entre WhatsApp, notas y planillas. Con Eventify pude ordenar el presupuesto y los proveedores en un solo lugar."</p><div class="tcn">Martina López</div><div class="tcr">Organizó un cumpleaños de 30 · CABA</div></div>
+    <div class="tcard"><img class="tcimg" src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=200&auto=format&fit=crop" alt="Sofía"/><div class="tcstars">★★★★★</div><p class="tcq">"Me ayudó a comparar opciones sin perder horas buscando. La IA me sirvió para saber qué tareas resolver primero."</p><div class="tcn">Sofía Ramírez</div><div class="tcr">Emprendedora gastronómica · Córdoba</div></div>
+    <div class="tcard"><img class="tcimg" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=200&auto=format&fit=crop" alt="Lucas"/><div class="tcstars">★★★★★</div><p class="tcq">"Lo que más me gustó fue que no parece una herramienta corporativa difícil. Es clara, visual y fácil de usar."</p><div class="tcn">Lucas Fernández</div><div class="tcr">Organizador independiente · Rosario</div></div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec faq-sec reveal" id="faq-sec">
+  <p class="sl">Preguntas frecuentes</p>
+  <h2 class="st">Todo lo que necesitás saber antes de empezar.</h2>
+  <p class="ss">Tocá cada pregunta para ver la respuesta.</p>
+  <div class="faq-wrap">
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿Eventify es solo para eventos grandes?</span><span class="fia">+</span></div><div class="fan"><p>No. Está pensada especialmente para eventos sociales, pequeños y medianos, además de emprendimientos y organizaciones chicas.</p></div></div>
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿Necesito experiencia organizando eventos?</span><span class="fia">+</span></div><div class="fan"><p>No. La plataforma guía el proceso paso a paso con Tefita para que cualquier usuario pueda organizar su evento sin errores.</p></div></div>
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿La IA toma decisiones por mí?</span><span class="fia">+</span></div><div class="fan"><p>No. Tefita funciona como asistente: sugiere, ordena y recomienda, pero la decisión final siempre la tomás vos.</p></div></div>
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿Puedo encontrar proveedores dentro de la app?</span><span class="fia">+</span></div><div class="fan"><p>Sí. Eventify conecta usuarios con proveedores de catering, fotografía, decoración, sedes, música y más. Podés comparar y contratar sin salir de la app.</p></div></div>
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿Cómo funciona Tefita?</span><span class="fia">+</span></div><div class="fan"><p>Tefita analiza el tipo de evento, cantidad de invitados y presupuesto para organizar tareas automáticamente, sugerir proveedores y ayudarte a tomar decisiones más rápido.</p></div></div>
+    <div class="fi"><div class="fiq" onclick="tog(this)"><span>¿Qué pasa si tengo un problema técnico?</span><span class="fia">+</span></div><div class="fan"><p>Tenemos copias de seguridad automáticas diarias y soporte técnico disponible. En caso de fallas, activamos servidores de respaldo para mantener tu información segura.</p></div></div>
+  </div>
+</section>
+
+<!-- RISK -->
+<section class="risk-sec reveal">
+  <p class="sl" style="color:var(--violet)">Transparencia</p>
+  <h2 class="st" style="color:white">Sabemos los riesgos. Tenemos plan B.</h2>
+  <p class="ss" style="color:var(--lilac)">Parte de construir algo sólido es anticiparse. Compartimos nuestras contingencias con honestidad.</p>
+  <div class="rg">
+    <div class="rc"><div class="rct"><div class="rdot" style="background:#ff8a88"></div><h4>Fallas técnicas de la plataforma</h4></div><p>Probabilidad media, impacto alto. Las caídas del sistema pueden afectar la confianza del usuario en momentos críticos de organización.</p><span class="rp rh">⚠ Riesgo mayor · Plan B activo</span><div class="rplan">Plan B: backups automáticos diarios, servidores de respaldo en nube, equipo técnico 24/7 y comunicación transparente ante incidentes.</div></div>
+    <div class="rc"><div class="rct"><div class="rdot" style="background:#6ee7b7"></div><h4>Menor captación de usuarios inicial</h4></div><p>Probabilidad alta, impacto bajo/medio. Normal en startups. No compromete el funcionamiento de la plataforma.</p><span class="rp rl">✓ Riesgo mínimo · Mitigado</span><div class="rplan">Plan B: campañas en IG/TikTok, programa de referidos, promociones de lanzamiento y alianzas con organizadores del sector.</div></div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-sec reveal">
+  <h2>Tu evento, sin complicaciones.</h2>
+  <p>Gratis para siempre en el plan básico.<br>Sin tarjeta de crédito. Sin sorpresas.</p>
+  <button class="btn-cw" onclick="openFab()">Crear mi evento gratis ✨</button>
+  <div class="cta-note">✓ Sin permanencia &nbsp;·&nbsp; ✓ Cancelás cuando quieras &nbsp;·&nbsp; ✓ Soporte incluido</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="fb">
+    <div class="fl">
+      <svg width="160" height="44" viewBox="0 0 340 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 50 22 A 28 28 0 1 1 72 65" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.85"/>
+        <path d="M 23 45 A 19 19 0 0 1 50 20" fill="none" stroke="#aa9df8" stroke-width="2" stroke-linecap="round"/>
+        <path d="M 50 34 A 11 11 0 1 1 58 55" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" opacity="0.3"/>
+        <circle cx="50" cy="50" r="5" fill="#6669f4"/>
+        <polyline points="47,50 49.5,53 54,46" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="50" cy="22" r="3" fill="#aa9df8"/>
+        <circle cx="22" cy="50" r="2.5" fill="white" opacity="0.7"/>
+        <text x="86" y="62" font-family="Helvetica Neue, Helvetica, Arial, sans-serif" font-size="38" font-weight="200" fill="white">event<tspan font-weight="500" fill="#6669f4">ify</tspan></text>
+      </svg>
+    </div>
+    <p>Tu evento, sin complicaciones.<br>© 2025 Jazmin Buceta & Rocío Melgarejo · Universidad de Palermo</p>
+  </div>
+  <div class="fc"><h4>Plataforma</h4><a href="#app-sec">Cómo funciona</a><a href="#evita-sec">Tefita IA</a><a href="#prov-sec">Proveedores</a><a href="#cot-sec">Cotizador</a></div>
+  <div class="fc"><h4>Empresa</h4><a href="#">Misión y visión</a><a href="#">Nosotras</a><a href="#">Blog</a><a href="#">Prensa</a></div>
+  <div class="fc"><h4>Soporte</h4><a href="#faq-sec">FAQ</a><a href="#">Privacidad</a><a href="#">Términos</a><a href="#">Contacto</a></div>
+  <div class="fbot">
+    <p>Paleta de marca:</p>
+    <div class="fclrs"><div class="fclr" style="background:#212541"></div><div class="fclr" style="background:#6669f4"></div><div class="fclr" style="background:#aa9df8"></div><div class="fclr" style="background:#c6c6e8"></div><div class="fclr" style="background:#f4f3ff;border-color:rgba(255,255,255,.25)"></div></div>
+    <p>_eventify — tu evento, sin complicaciones.</p>
+  </div>
+</footer>
+
+<!-- MODAL PAGO -->
+<div class="modal-overlay" id="payModal" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="modal-title">Completá tu suscripción</h3><p id="modal-sub">Plan seleccionado</p></div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body">
+      <div class="plan-summary">
+        <div class="ps-left"><span id="ps-name">Plan Premium</span><span id="ps-desc">Facturación mensual · Cancelás cuando quieras</span></div>
+        <div class="ps-price" id="ps-price">$10.000/mes</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Nombre completo</label>
+        <input class="form-input" placeholder="Ej: Rocío Melgarejo" id="f-name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" placeholder="tu@email.com" id="f-email"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Datos de tarjeta</label>
+        <div class="card-icons">
+          <div class="card-icon">💳</div>
+          <div class="card-icon" style="font-size:14px;font-weight:800;color:#1a1aff;">VISA</div>
+          <div class="card-icon" style="font-size:9px;font-weight:800;color:#eb001b;">MASTER<br>CARD</div>
+          <div class="card-icon" style="font-size:10px;font-weight:800;color:#2e77bb;">AMEX</div>
+        </div>
+        <div class="card-input-wrap" style="margin-bottom:10px;">
+          <input class="form-input" placeholder="1234 5678 9012 3456" id="f-card" maxlength="19" oninput="fmtCard(this)"/>
+          <span class="card-lock">🔒</span>
+        </div>
+        <div class="form-row">
+          <div><input class="form-input" placeholder="MM/AA" id="f-exp" maxlength="5" oninput="fmtExp(this)"/></div>
+          <div><input class="form-input" placeholder="CVV" id="f-cvv" maxlength="4" type="password"/></div>
+        </div>
+      </div>
+      <button class="btn-pagar" id="btn-pagar" onclick="procesarPago()">Confirmar suscripción →</button>
+      <p class="secure-note">🔒 Pago seguro con encriptación SSL</p>
+    </div>
+    <div class="modal-success" id="modal-success">
+      <div class="success-icon">🎉</div>
+      <h3>¡Ya sos parte de Eventify!</h3>
+      <p>Tu suscripción al <strong id="suc-plan"></strong> fue activada con éxito.<br>Te enviamos un mail de confirmación. ¡A organizar eventos sin estrés!</p>
+      <button class="btn-pagar" style="margin-top:1.5rem" onclick="closeModal()">Ir a mi cuenta →</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAB EVITA -->
+<div class="fab">
+  <div class="fab-pop" id="fabPop">
+    <div class="fp-hd">
+      <div class="fp-av"><img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=80&auto=format&fit=crop" alt="Tefita"/></div>
+      <div><div class="fp-n" id="fabName">Tefita · Asistente Eventify</div><div class="fp-st"><span class="odot"></span>En línea ahora</div></div>
+      <button class="fp-close" onclick="closeFab()">✕</button>
+    </div>
+    <div class="fp-msgs" id="fabMsgs"></div>
+    <div class="fp-qr" id="fabQR"></div>
+    <div class="fp-in-area">
+      <input class="fp-in" id="fabIn" placeholder="Escribile a Tefita..." onkeydown="if(event.key==='Enter')sendFab()"/>
+      <button class="fp-send" onclick="sendFab()">➤</button>
+    </div>
+  </div>
+  <button class="fab-btn" onclick="toggleFab()" style="position:relative;">
+    <div class="fab-ring"></div>
+    <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+    <div class="fab-notif" id="fabNotif">1</div>
+  </button>
+</div>
+
+<script>
+// ── CURSOR
+const cur=document.getElementById('cur');
+document.addEventListener('mousemove',e=>{cur.style.left=e.clientX+'px';cur.style.top=e.clientY+'px';});
+document.querySelectorAll('button,a,.pc,.sc,.fcard,.tcard,.rc,.dcard,.mvc,.pvcard,.pcard,.fi').forEach(el=>{
+  el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+  el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+});
+
+// ── NAV
+window.addEventListener('scroll',()=>document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60));
+
+// ── REVEAL
+const ro=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+
+// ── STATS
+function animN(id,t){let v=0;const el=document.getElementById(id);const s=t/(2000/16);const i=setInterval(()=>{v=Math.min(v+s,t);el.textContent=Math.floor(v);if(v>=t)clearInterval(i);},16);}
+const so=new IntersectionObserver(es=>{if(es[0].isIntersecting){animN('s1',12);animN('s2',87);animN('s3',5);animN('s4',4);so.disconnect();}},{threshold:.5});
+so.observe(document.querySelector('.stats'));
+
+// ── APP TABS
+function showTab(id,el){
+  document.querySelectorAll('.app-panel').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.atab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('panel-'+id).classList.add('on');
+  el.classList.add('on');
+  if(id==='cot')calcApp();
+}
+
+// ── TAREAS INTERACTIVAS
+let doneCount=2,totalTasks=5;
+function toggleTask(el){
+  el.classList.toggle('done');
+  const cb=el.querySelector('.task-cb');
+  if(el.classList.contains('done')){cb.style.background='var(--blue)';cb.style.borderColor='var(--blue)';cb.style.color='white';cb.style.fontSize='11px';cb.textContent='✓';doneCount++;}
+  else{cb.style.background='';cb.style.borderColor='';cb.style.color='';cb.textContent='✓';doneCount--;}
+  document.getElementById('task-count').textContent=doneCount+'/'+totalTasks;
+  const pct=Math.round((doneCount/totalTasks)*100);
+  document.getElementById('pct').textContent=pct+'% listo';
+}
+function addTask(){
+  const name=prompt('Nombre de la nueva tarea:');
+  if(!name)return;
+  totalTasks++;
+  const el=document.createElement('div');el.className='task';el.onclick=function(){toggleTask(this);};
+  el.innerHTML=`<div class="task-cb">✓</div><span>${name}</span>`;
+  document.getElementById('taskList').appendChild(el);
+  document.getElementById('task-count').textContent=doneCount+'/'+totalTasks;
+}
+
+// ── COTIZADORES
+const prc={c1:7000,c2:2250,c3:1875,c4:2500,c5:5000,c6:1500};
+const nms={c1:'🍽 Catering',c2:'🎵 DJ & sonido',c3:'🌸 Decoración',c4:'📸 Fotografía',c5:'🏛 Sede/Salón',c6:'🎤 Animación'};
+function calcCot(pfx){
+  const inv=parseInt(document.getElementById(pfx+'-inv').value);
+  const mult=parseFloat(document.getElementById(pfx+'-evtype').value);
+  document.getElementById(pfx+'-invv').textContent=inv;
+  if(document.getElementById(pfx+'-invs'))document.getElementById(pfx+'-invs').textContent=inv;
+  let tot=0;const rows=[];
+  ['c1','c2','c3','c4','c5','c6'].forEach(id=>{
+    const cb=document.getElementById(pfx+'-'+id);
+    if(cb&&cb.checked){const v=Math.round(prc[id]*(inv/80)*mult/100)*100;tot+=v;rows.push({n:nms[id],v});}
+  });
+  document.getElementById(pfx+'-breakdown').innerHTML=rows.map(r=>`<div class="cr"><span>${r.n}</span><span>$${r.v.toLocaleString('es-AR')}</span></div>`).join('');
+  document.getElementById(pfx+'-total').textContent='$'+tot.toLocaleString('es-AR');
+}
+function calcApp(){calcCot('a');}
+function calcG(){calcCot('g');}
+calcG();
+
+// ── FAQ
+function tog(q){
+  const a=q.nextElementSibling,ar=q.querySelector('.fia'),op=a.classList.contains('open');
+  document.querySelectorAll('.fan.open').forEach(x=>{x.classList.remove('open');x.previousElementSibling.querySelector('.fia').classList.remove('open');});
+  if(!op){a.classList.add('open');ar.classList.add('open');}
+}
+
+// ── PLANES INTERACTIVOS
+let selPlanKey=null;
+const planData={
+  low:{name:'Plan Low',price:'$3.000/mes',desc:'Facturación mensual · Sin compromiso'},
+  premium:{name:'Plan Premium',price:'$10.000/mes',desc:'Facturación mensual · Cancelás cuando quieras'},
+  pro:{name:'Plan Pro Event',price:'$30.000/mes',desc:'Facturación mensual · Ejecutivo dedicado'}
+};
+function selPlan(key){
+  document.querySelectorAll('.pcard').forEach(p=>p.classList.remove('sel'));
+  document.getElementById('plan-'+key).classList.add('sel');
+  selPlanKey=key;
+  const btn=document.getElementById('btn-comprar');
+  btn.classList.add('show');
+  btn.textContent=`Comprar ${planData[key].name} 🛒`;
+}
+
+// ── MODAL PAGO
+function openModal(){
+  if(!selPlanKey){alert('Seleccioná un plan primero');return;}
+  const d=planData[selPlanKey];
+  document.getElementById('modal-title').textContent='Completá tu suscripción';
+  document.getElementById('modal-sub').textContent=d.name+' · '+d.price;
+  document.getElementById('ps-name').textContent=d.name;
+  document.getElementById('ps-desc').textContent=d.desc;
+  document.getElementById('ps-price').textContent=d.price;
+  document.getElementById('modal-body').style.display='block';
+  document.getElementById('modal-success').classList.remove('show');
+  document.getElementById('btn-pagar').disabled=false;
+  document.getElementById('btn-pagar').textContent='Confirmar suscripción →';
+  document.getElementById('payModal').classList.add('open');
+}
+function closeModal(){document.getElementById('payModal').classList.remove('open');}
+function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}
+function fmtExp(el){let v=el.value.replace(/\D/g,'');if(v.length>2)v=v.substring(0,2)+'/'+v.substring(2,4);el.value=v;}
+function procesarPago(){
+  const name=document.getElementById('f-name').value.trim();
+  const email=document.getElementById('f-email').value.trim();
+  const card=document.getElementById('f-card').value.replace(/\s/g,'');
+  const exp=document.getElementById('f-exp').value;
+  const cvv=document.getElementById('f-cvv').value;
+  if(!name||!email||card.length<16||exp.length<5||cvv.length<3){alert('Por favor completá todos los campos correctamente.');return;}
+  const btn=document.getElementById('btn-pagar');
+  btn.disabled=true;btn.textContent='Procesando...';
+  setTimeout(()=>{
+    document.getElementById('modal-body').style.display='none';
+    const suc=document.getElementById('modal-success');suc.classList.add('show');
+    document.getElementById('suc-plan').textContent=planData[selPlanKey].name;
+  },2000);
+}
+
+// ── EVITA AI ENGINE — respuestas locales (sin API key)
+let profile='f';
+
+const RESPUESTAS=[
+  {k:['hola','buenas','buen día','buenas tardes','buenas noches','hey'],r:'¡Hola! 👋 Me alegra que estés acá. ¿Qué tipo de evento estás planeando? Puedo ayudarte con presupuesto, proveedores, cronograma y mucho más.'},
+  {k:['cumpleaños','cumple','birthday'],r:'¡Los cumpleaños son lo mejor! 🎂 Para organizar uno sin estrés lo primero es definir fecha, cantidad de invitados y presupuesto. ¿Cuántas personas estimás?'},
+  {k:['casamiento','boda','matrimonio','wedding'],r:'¡Qué momento tan especial! 💍 Para casamientos recomiendo arrancar con al menos 6 meses de anticipación. ¿Ya tienen fecha y salón en mente?'},
+  {k:['15','quince','quinceañera','quinceaños'],r:'¡Los 15 son únicos! 🌸 Para esta celebración lo clave es cerrar primero el salón y el catering, que son los que más se agotan. ¿Tenés idea del estilo que buscan?'},
+  {k:['corporativo','empresa','laboral','trabajo','conference','conferencia'],r:'Para eventos corporativos lo fundamental es el espacio, el catering y la logística audiovisual. 🏢 ¿Es interno o abierto al público?'},
+  {k:['presupuesto','precio','costo','cuánto','plata','dinero'],r:'El presupuesto depende mucho del tipo y tamaño del evento. 💰 Te recomiendo usar nuestro cotizador interactivo para tener una estimación rápida. ¿Cuántos invitados tenés pensados?'},
+  {k:['plan','planes','suscripción','precio del plan'],r:'Tenemos 3 planes: 🟣 Low ($3.000/mes) para eventos pequeños, 🔵 Premium ($10.000/mes) con Tefita IA completa, y 🚀 Pro Event ($30.000/mes) para organizadores profesionales. ¿Cuál se adapta mejor a lo que necesitás?'},
+  {k:['proveedor','catering','salón','salon','fotógrafo','fotografo','música','musica','dj','flores','decoración','decoracion'],r:'¡Buena pregunta! 🌟 En nuestra sección de Proveedores encontrás opciones de catering, salones, fotografía, música y decoración. Todos verificados y con reseñas reales. ¿Qué categoría te interesa?'},
+  {k:['invitados','lista','confirmación','confirmacion','rsvp'],r:'Gestionar los invitados es clave para no perder el control. 📋 En Eventify podés armar la lista, mandar invitaciones digitales y ver quién confirmó asistencia en tiempo real. ¿Cuántas personas van a invitar?'},
+  {k:['cronograma','agenda','timeline','hora','horario'],r:'Un buen cronograma es el secreto de los eventos exitosos. 🗓️ Tefita te ayuda a armar uno automáticamente con los tiempos recomendados según el tipo de evento. ¿Cuántas horas dura tu evento?'},
+  {k:['funciona','cómo','como','qué es','que es','qué hace','que hace'],r:'Eventify centraliza todo lo del evento en un solo lugar: invitados, presupuesto, proveedores y cronograma. ✨ Y yo, Tefita, te guío en cada paso. ¿Querés que te cuente más sobre alguna función?'},
+  {k:['gracias','genial','perfecto','buenísimo','buenisimo','re bien','copado'],r:'¡De nada! 😊 Para eso estoy. Si en algún momento necesitás ayuda con algo del evento, acá voy a estar. ¿Hay algo más en lo que pueda ayudarte?'},
+  {k:['chau','hasta luego','bye','adiós','adios'],r:'¡Hasta pronto! 👋 Cuando quieras retomar la organización de tu evento, acá voy a estar. ¡Mucho éxito con el evento!'},
+];
+
+const FALLBACKS=[
+  '¡Buena pregunta! 🎉 Lo que te puedo decir es que Eventify está pensado para que organizar un evento sea fácil y sin estrés. ¿Querés saber más sobre presupuesto, proveedores o cronograma?',
+  'Entiendo lo que me contás. 😊 Como asistente de Eventify puedo ayudarte con organización, presupuesto, proveedores y más. ¿Por dónde preferís arrancar?',
+  '¡Me alegra que me escribas! 🌟 Para darte la mejor respuesta necesito entender un poco más tu evento. ¿De qué tipo de celebración se trata?',
+  'Esa es una consulta muy válida. 💡 Te recomiendo explorar nuestro cotizador o la sección de proveedores para encontrar lo que buscás. ¿Te ayudo a navegar la plataforma?',
+  '¡Claro que sí! 🎊 Estoy acá para ayudarte a que tu evento salga perfecto. Contame más y te oriento paso a paso.',
+];
+let fallI=0;
+
+async function callTefita(msgs){
+  await new Promise(r=>setTimeout(r,800+Math.random()*600));
+  const ultimo=msgs[msgs.length-1]?.content?.toLowerCase()||'';
+  for(const entry of RESPUESTAS){
+    if(entry.k.some(k=>ultimo.includes(k))) return entry.r;
+  }
+  const f=FALLBACKS[fallI%FALLBACKS.length];fallI++;return f;
+}
+function mkMsg(txt,role,box){
+  const row=document.createElement('div');row.className='mrow'+(role==='user'?' u':'');
+  const av=document.createElement('div');av.className='mav'+(role==='user'?' ua':'');
+  if(role==='bot'){const img=document.createElement('img');img.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=60&auto=format&fit=crop';img.alt='E';av.appendChild(img);}else{av.textContent='Vos';}
+  const b=document.createElement('div');b.className='bb '+(role==='user'?'usr':'bot');b.textContent=txt;
+  if(role==='user'){row.appendChild(b);row.appendChild(av);}else{row.appendChild(av);row.appendChild(b);}
+  box.appendChild(row);box.scrollTop=box.scrollHeight;
+}
+function mkTyp(box,id){
+  const row=document.createElement('div');row.className='mrow';row.id='t_'+id;
+  const av=document.createElement('div');av.className='mav';const img=document.createElement('img');img.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=60&auto=format&fit=crop';img.alt='E';av.appendChild(img);
+  const b=document.createElement('div');b.className='bb ty';b.innerHTML='<div class="tdots"><div class="td"></div><div class="td"></div><div class="td"></div></div>';
+  row.appendChild(av);row.appendChild(b);box.appendChild(row);box.scrollTop=box.scrollHeight;
+}
+function rmTyp(id){const t=document.getElementById('t_'+id);if(t)t.remove();}
+function setQR(opts,box,inId){
+  box.innerHTML='';
+  opts.forEach(o=>{const b=document.createElement('button');b.className=box.classList.contains('fp-qr')?'fp-qbtn':'qr';b.textContent=o;b.onclick=()=>{document.getElementById(inId).value=o;inId==='mainIn'?sendMain():sendFab();};box.appendChild(b);});
+}
+
+// MAIN CHAT
+let mH=[];
+const mBox=document.getElementById('mainMsgs'),mQR=document.getElementById('mainQR');
+async function sendMain(){
+  const inp=document.getElementById('mainIn');const txt=inp.value.trim();if(!txt)return;
+  inp.value='';mQR.innerHTML='';mkMsg(txt,'user',mBox);mH.push({role:'user',content:txt});
+  mkTyp(mBox,'main');const rep=await callTefita(mH);rmTyp('main');
+  mkMsg(rep,'bot',mBox);mH.push({role:'assistant',content:rep});
+  setQR(['¿Qué planes tienen?','Organizar un evento','¿Cómo funciona Tefita?','Ver proveedores'],mQR,'mainIn');
+}
+(async()=>{
+  mkTyp(mBox,'m0');await new Promise(r=>setTimeout(r,900));rmTyp('m0');
+  const w='¡Hola! Soy Tefita 👋 Tu asistente de Eventify. Estoy acá para ayudarte a organizar tu próximo evento sin estrés. ¿Por dónde empezamos?';
+  mkMsg(w,'bot',mBox);mH.push({role:'assistant',content:w});
+  setQR(['Organizar un evento','¿Cuánto cuesta?','¿Qué puedo hacer aquí?','Ver proveedores'],mQR,'mainIn');
+})();
+function setProf(p){
+  profile=p;
+  document.getElementById('pbf').classList.toggle('on',p==='f');
+  document.getElementById('pbm').classList.toggle('on',p==='m');
+  const nm=p==='f'?'Tefita · Asistente Eventify':'Tefo · Asistente Eventify';
+  document.getElementById('mainName').textContent=nm;
+  document.getElementById('fabName').textContent=nm;
+  mH=[];mBox.innerHTML='';mQR.innerHTML='';
+  fH=[];fBox.innerHTML='';fQR.innerHTML='';fInited=false;
+  const g=p==='f'?'¡Hola de nuevo! Soy Tefita 👩 Lista para ayudarte. ¿Qué evento querés organizar?':'¡Hola de nuevo! Soy Tefo 👨 Listo para ayudarte. ¿Qué evento querés organizar?';
+  mkMsg(g,'bot',mBox);mH.push({role:'assistant',content:g});
+  setQR(['Organizar un evento','Ver planes','¿Cómo funciona?','Ver proveedores'],mQR,'mainIn');
+}
+
+// FAB CHAT
+let fH=[],fOpen=false,fInited=false;
+const fBox=document.getElementById('fabMsgs'),fQR=document.getElementById('fabQR');
+async function sendFab(){
+  const inp=document.getElementById('fabIn');const txt=inp.value.trim();if(!txt)return;
+  inp.value='';fQR.innerHTML='';mkMsg(txt,'user',fBox);fH.push({role:'user',content:txt});
+  mkTyp(fBox,'fab');const rep=await callTefita(fH);rmTyp('fab');
+  mkMsg(rep,'bot',fBox);fH.push({role:'assistant',content:rep});
+  setQR(['Contame más','¿Cuánto cuesta?','Quiero registrarme','Ver proveedores'],fQR,'fabIn');
+}
+async function initFab(){
+  if(fInited)return;fInited=true;
+  mkTyp(fBox,'f0');await new Promise(r=>setTimeout(r,900));rmTyp('f0');
+  const g=profile==='f'?'¡Hola! Soy Tefita 🎉 ¿Qué evento querés organizar hoy?':'¡Hola! Soy Tefo 🎉 ¿Qué evento querés organizar hoy?';
+  mkMsg(g,'bot',fBox);fH.push({role:'assistant',content:g});
+  setQR(['Empezar gratis','¿Qué planes tienen?','Ayuda con proveedores','¿Cómo funciona?'],fQR,'fabIn');
+}
+function toggleFab(){fOpen?closeFab():openFab();}
+function openFab(){
+  document.getElementById('fabPop').classList.add('open');
+  document.getElementById('fabNotif').style.display='none';
+  fOpen=true;initFab();setTimeout(()=>document.getElementById('fabIn').focus(),300);
+}
+function closeFab(){document.getElementById('fabPop').classList.remove('open');fOpen=false;}
+</script>
+</body>
+</html>
